@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>NEXUS ARCADE — Play. Compete. Repeat.</title>
+<meta name="description" content="A pro-level retro-neon game arcade — 7 free browser games, leaderboards & more." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ================= PRELOADER ================= -->
+<div id="preloader">
+  <div class="preloader-inner">
+    <div class="logo-glitch" data-text="NEXUS ARCADE">NEXUS ARCADE</div>
+    <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+    <p class="loader-text" id="loaderText">Booting arcade cabinets…</p>
+  </div>
+</div>
+
+<!-- ================= HEADER / NAV ================= -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-icon">🕹️</span>
+      <span class="brand-text">NEXUS<span class="accent">ARCADE</span></span>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Search games…" autocomplete="off">
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" title="Toggle theme">🌙</button>
+      <button class="icon-btn" id="profileBtn" title="Profile">👤</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="grid-floor"></div>
+    <div class="scanline"></div>
+  </div>
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <span class="glow-text">PLAY.</span>
+      <span class="glow-text pink">COMPETE.</span>
+      <span class="glow-text cyan">REPEAT.</span>
+    </h1>
+    <p class="hero-sub">7 free browser games. Zero downloads. Pure neon nostalgia.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" id="playNowBtn">▶ Play Now</button>
+      <button class="btn btn-ghost" id="viewLeaderboardBtn">🏆 Leaderboard</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" id="statGames">7</span><span class="stat-label">Games</span></div>
+      <div class="stat"><span class="stat-num" id="statPlayed">0</span><span class="stat-label">Sessions Played</span></div>
+      <div class="stat"><span class="stat-num" id="statHigh">0</span><span class="stat-label">Total High Scores</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FILTER BAR ================= -->
+<section class="filter-bar">
+  <div class="filter-inner">
+    <div class="chips" id="categoryChips">
+      <button class="chip active" data-cat="All">All</button>
+      <button class="chip" data-cat="Action">Action</button>
+      <button class="chip" data-cat="Puzzle">Puzzle</button>
+      <button class="chip" data-cat="Arcade">Arcade</button>
+      <button class="chip" data-cat="Skill">Skill</button>
+    </div>
+    <div class="sort-wrap">
+      <label for="sortSelect">Sort:</label>
+      <select id="sortSelect">
+        <option value="default">Featured</option>
+        <option value="rating">Top Rated</option>
+        <option value="name">A–Z</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GAME GRID ================= -->
+<section class="game-grid-section" id="games">
+  <h2 class="section-title">🎮 Choose Your Game</h2>
+  <div class="game-grid" id="gameGrid"><!-- injected by JS --></div>
+  <p class="no-results" id="noResults" hidden>No games match your search 🕵️</p>
+</section>
+
+<!-- ================= LEADERBOARD ================= -->
+<section class="leaderboard-section" id="leaderboard">
+  <h2 class="section-title">🏆 Global Leaderboard</h2>
+  <div class="leaderboard-card">
+    <table class="leaderboard-table">
+      <thead>
+        <tr><th>#</th><th>Game</th><th>Score</th><th>Date</th></tr>
+      </thead>
+      <tbody id="leaderboardBody"><tr><td colspan="4" class="empty-row">No scores yet — go play something!</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= PROFILE ================= -->
+<section class="profile-section" id="profile">
+  <h2 class="section-title">👤 Player Profile</h2>
+  <div class="profile-card glass">
+    <div class="profile-avatar">🎮</div>
+    <div class="profile-info">
+      <h3 id="profileName">Guest Player</h3>
+      <div class="profile-grid">
+        <div><span id="profileGamesPlayed">0</span><small>Games Played</small></div>
+        <div><span id="profileTotalScore">0</span><small>Total Score</small></div>
+        <div><span id="profileFav">—</span><small>Favorite Game</small></div>
+      </div>
+      <button class="btn btn-ghost small" id="resetDataBtn">Reset All Data</button>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <p>Built with pure HTML, CSS &amp; JavaScript · No frameworks · No tracking · Just games.</p>
+  <p class="kbd-hint">⌨️ Shortcuts: <kbd>ESC</kbd> pause · <kbd>F</kbd> fullscreen · <kbd>R</kbd> restart</p>
+</footer>
+
+<!-- ================= GAME OVERLAY (SHELL) ================= -->
+<div class="game-overlay" id="gameOverlay" hidden>
+  <div class="game-shell" id="gameShell">
+    <div class="game-topbar">
+      <button class="icon-btn" id="backBtn" title="Back to arcade">⬅</button>
+      <div class="game-title-wrap">
+        <span id="gameTitleIcon">🎮</span>
+        <span id="gameTitleText">Game</span>
+      </div>
+      <div class="game-scores">
+        <div class="score-pill">Score: <span id="scoreVal">0</span></div>
+        <div class="score-pill high">Best: <span id="highScoreVal">0</span></div>
+      </div>
+      <div class="game-controls">
+        <button class="icon-btn" id="muteBtn" title="Mute/unmute">🔊</button>
+        <button class="icon-btn" id="pauseBtn" title="Pause/Resume (ESC)">⏸</button>
+        <button class="icon-btn" id="restartBtn" title="Restart (R)">🔁</button>
+        <button class="icon-btn" id="fullscreenBtn" title="Fullscreen (F)">⛶</button>
+      </div>
+    </div>
+
+    <div class="game-stage" id="gameStage">
+      <!-- game canvas / DOM injected here -->
+      <div class="pause-screen" id="pauseScreen" hidden>
+        <h2>⏸ PAUSED</h2>
+        <p>Press ESC or click Resume</p>
+        <button class="btn btn-primary" id="resumeOverlayBtn">▶ Resume</button>
+      </div>
+      <div class="gameover-screen" id="gameoverScreen" hidden>
+        <h2 id="gameoverTitle">GAME OVER</h2>
+        <p id="gameoverScoreText">Score: 0</p>
+        <p id="gameoverHighText" class="new-high" hidden>🎉 New High Score!</p>
+        <div class="gameover-actions">
+          <button class="btn btn-primary" id="playAgainBtn">🔁 Play Again</button>
+          <button class="btn btn-ghost" id="backHomeBtn">🏠 Back to Arcade</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-help" id="gameHelp"></div>
+  </div>
+</div>
+
+<script src="js/games.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
